@@ -91,7 +91,7 @@ const Navbar = () => {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-2xl font-bold bg-gradient-to-r from-red-600 to-pink-500 bg-clip-text text-transparent"
+                className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-300 bg-clip-text text-transparent"
               >
                 LifeStream
               </motion.span>

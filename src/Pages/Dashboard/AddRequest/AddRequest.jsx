@@ -45,7 +45,6 @@ const AddRequest = () => {
       .then(([upazilaRes, districtRes]) => {
         setUpazilas(upazilaRes.data.upazilas || []);
         setDistricts(districtRes.data.districts || []);
-        setFilteredUpazilas(upazilaRes.data.upazilas || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -56,16 +55,21 @@ const AddRequest = () => {
 
   useEffect(() => {
     if (selectedDistrict) {
-      const filtered = upazilas.filter(
-        (u) =>
-          u.district &&
-          u.district.toLowerCase() === selectedDistrict.toLowerCase()
-      );
-      setFilteredUpazilas(filtered);
+      // Find the district ID from the selected district name
+      const district = districts.find((d) => d.name === selectedDistrict);
+      if (district) {
+        // Filter upazilas by district_id
+        const filtered = upazilas.filter(
+          (u) => u.district_id === district.id
+        );
+        setFilteredUpazilas(filtered);
+      } else {
+        setFilteredUpazilas([]);
+      }
     } else {
-      setFilteredUpazilas(upazilas);
+      setFilteredUpazilas([]);
     }
-  }, [selectedDistrict, upazilas]);
+  }, [selectedDistrict, upazilas, districts]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -389,12 +393,14 @@ const AddRequest = () => {
                         <div className="relative">
                           <select
                             name="upazila"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none appearance-none bg-white"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none appearance-none bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
                             required
                             disabled={!selectedDistrict}
                           >
-                            <option value="" disabled>
-                              Select your Upazila
+                            <option value="">
+                              {selectedDistrict
+                                ? "Select upazila"
+                                : "First select a district"}
                             </option>
                             {filteredUpazilas.map((u) => (
                               <option value={u.name} key={u.id}>
@@ -406,6 +412,11 @@ const AddRequest = () => {
                             <MapPin className="w-5 h-5 text-gray-400" />
                           </div>
                         </div>
+                        {!selectedDistrict && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Please select a district first to see available upazilas
+                          </p>
+                        )}
                       </div>
                     </div>
 

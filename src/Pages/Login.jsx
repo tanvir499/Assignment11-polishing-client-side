@@ -1,12 +1,13 @@
 import { FcGoogle } from "react-icons/fc";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import auth from "../firebase/firebase.config";
 import { AuthContext } from "../Provider/AuthProvider";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { pageVariants, floatAnimation } from "../utils/AnimationUtils";
+import { User, Droplets, Heart, Mail, Lock } from "lucide-react";
 
 const Login = () => {
   const { setUser, handleGoogleSignIn } = useContext(AuthContext);
@@ -14,6 +15,7 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,6 +31,27 @@ const Login = () => {
       })
       .catch((error) => {
         toast.error(error.message);
+      });
+  };
+
+  const handleDemoLogin = () => {
+    setIsDemoLoading(true);
+    const demoEmail = "demo@blooddonation.com";
+    const demoPassword = "Demo123456";
+
+    signInWithEmailAndPassword(auth, demoEmail, demoPassword)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setUser(user);
+        toast.success("Logged in with demo account!");
+        navigate(location.state ? location.state : "/");
+      })
+      .catch((error) => {
+        toast.error("Demo login failed. Please try again.");
+        console.error("Demo login error:", error);
+      })
+      .finally(() => {
+        setIsDemoLoading(false);
       });
   };
 
@@ -53,9 +76,9 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center p-4">
       <motion.div
         animate={floatAnimation}
-        className="hidden lg:block absolute top-10 left-10 text-4xl opacity-10"
+        className="hidden lg:block absolute top-10 left-10 opacity-10"
       >
-        ❤️
+        <Heart className="w-16 h-16 text-red-400" />
       </motion.div>
       <motion.div
         animate={{
@@ -68,9 +91,9 @@ const Login = () => {
           delay: 0.5,
           ease: "easeInOut",
         }}
-        className="hidden lg:block absolute bottom-10 right-10 text-4xl opacity-10"
+        className="hidden lg:block absolute bottom-10 right-10 opacity-10"
       >
-        🩸
+        <Droplets className="w-16 h-16 text-red-400" />
       </motion.div>
 
       <motion.div
@@ -79,7 +102,7 @@ const Login = () => {
         variants={pageVariants}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700">
+        <div className="rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-200">
           <motion.div
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -87,7 +110,7 @@ const Login = () => {
             className="text-center mb-6 md:mb-8"
           >
             <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl md:rounded-2xl mb-3 md:mb-4 shadow-md">
-              <span className="text-3xl md:text-4xl text-white">🩸</span>
+              <Droplets className="w-8 h-8 md:w-10 md:h-10 text-white" />
             </div>
             <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-600 via-pink-500 to-rose-500 bg-clip-text text-transparent mb-2">
               Welcome Back
@@ -112,11 +135,11 @@ const Login = () => {
                   name="email"
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                 />
-                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base">
-                  ✉️
+                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Mail className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
               </div>
             </motion.div>
@@ -134,11 +157,11 @@ const Login = () => {
                   name="password"
                   type="password"
                   placeholder="Enter your password"
-                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                 />
-                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base">
-                  🔒
+                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Lock className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
               </div>
             </motion.div>
@@ -165,9 +188,10 @@ const Login = () => {
             >
               <button
                 type="submit"
-                className="w-full px-6 py-3 md:px-8 md:py-4 font-semibold text-white rounded-lg md:rounded-xl bg-gradient-to-r from-red-500 via-pink-500 to-rose-500 hover:from-rose-600 hover:via-pink-600 hover:to-red-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm md:text-base"
+                className="w-full flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 font-semibold text-white rounded-lg md:rounded-xl bg-gradient-to-r from-red-500 via-pink-500 to-rose-500 hover:from-rose-600 hover:via-pink-600 hover:to-red-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm md:text-base"
               >
-                Login
+                <Lock className="w-5 h-5" />
+                <span>Login</span>
               </button>
             </motion.div>
 
@@ -178,10 +202,10 @@ const Login = () => {
               className="relative my-4 md:my-6"
             >
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-600"></div>
+                <div className="w-full border-t border-gray-200"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-3 md:px-4 text-gray-500 dark:text-gray-400 text-xs md:text-sm">
+                <span className="px-3 md:px-4 text-gray-500 text-xs md:text-sm">
                   Or continue with
                 </span>
               </div>
@@ -195,7 +219,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={googleSignIn}
-                className="w-full flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 font-semibold text-gray-800 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md md:hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 text-sm md:text-base"
+                className="w-full flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 font-semibold text-gray-800 rounded-lg md:rounded-xl border border-gray-200 shadow-sm hover:shadow-md md:hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 text-sm md:text-base"
               >
                 <FcGoogle size={18} md:size={22} />
                 <span>Continue with Google</span>
@@ -203,9 +227,38 @@ const Login = () => {
             </motion.div>
 
             <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                disabled={isDemoLoading}
+                className="w-full flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 font-semibold text-white rounded-lg md:rounded-xl bg-gradient-to-r from-red-500 to-red-300 hover:shadow-lg shadow-sm transform hover:-translate-y-0.5 transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isDemoLoading ? (
+                  <>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                    />
+                    <span>Logging in...</span>
+                  </>
+                ) : (
+                  <>
+                    <User className="w-5 h-5" />
+                    <span>Try Demo Account</span>
+                  </>
+                )}
+              </button>
+            </motion.div>
+
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
+              transition={{ delay: 0.8 }}
               className="text-center mt-2 pt-2"
             >
               <p className="text-gray-600 text-sm md:text-base">

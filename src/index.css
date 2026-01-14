@@ -1,2 +1,174 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* Theme Variables */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --border-color: #e5e7eb;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border-color: #334155;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+}
+
+/* Base styles with theme support */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom background utilities */
+.bg-radial-gradient {
+  background: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Custom gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #dc2626, #ec4899, #f97316);
+  background-size: 300% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Dashboard Layout Utilities */
+.dashboard-content {
+  min-height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.sidebar-expanded {
+  margin-left: 288px; /* w-72 equivalent */
+}
+
+.sidebar-collapsed {
+  margin-left: 80px; /* w-20 equivalent */
+}
+
+/* Ensure proper scrolling for dashboard content */
+.dashboard-main {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 1023px) {
+  .sidebar-expanded,
+  .sidebar-collapsed {
+    margin-left: 0;
+  }
+  
+  .dashboard-content {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+  
+  .dashboard-main {
+    height: auto;
+    min-height: 100vh;
+  }
+}
+
+/* Smooth transitions for all dashboard elements */
+.dashboard-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prevent content overflow in dashboard */
+.dashboard-content * {
+  box-sizing: border-box;
+}
+
+/* Recharts styling for better visibility */
+.recharts-wrapper {
+  max-width: 100% !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.recharts-responsive-container {
+  min-height: 200px !important;
+  width: 100% !important;
+}
+
+.recharts-surface {
+  overflow: visible !important;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #f1f5f9 !important;
+}
+
+.recharts-tooltip-wrapper {
+  z-index: 1000 !important;
+}
+
+/* Ensure chart text is visible */
+.recharts-text {
+  fill: #64748b !important;
+}
+
+.recharts-legend-wrapper {
+  position: relative !important;
+}
+
+/* Fix chart responsiveness */
+.recharts-wrapper svg {
+  width: 100% !important;
+  height: 100% !important;
+}

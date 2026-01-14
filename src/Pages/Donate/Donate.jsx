@@ -3,10 +3,24 @@ import { AuthContext } from "../../Provider/AuthProvider";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  Droplets,
+  DollarSign,
+  User,
+  Mail,
+  Heart,
+  Loader2,
+  Sparkles,
+  Star,
+  Zap,
+  Award,
+  Target,
+} from "lucide-react";
+import {
   floatAnimation,
   rotateAnimation,
   shineEffect,
   buttonHoverAnimation,
+  confettiAnimation,
 } from "../../utils/AnimationUtils";
 
 const Donate = () => {
@@ -79,7 +93,7 @@ const Donate = () => {
         animate={floatAnimation}
         className="hidden lg:block absolute top-10 left-10 text-5xl opacity-20"
       >
-        🩸
+        <Droplets className="w-12 h-12 text-red-300" />
       </motion.div>
 
       <motion.div
@@ -95,7 +109,7 @@ const Donate = () => {
         }}
         className="hidden lg:block absolute bottom-10 right-10 text-5xl opacity-20"
       >
-        🩸
+        <Heart className="w-12 h-12 text-red-300" />
       </motion.div>
 
       <motion.div
@@ -103,7 +117,7 @@ const Donate = () => {
         transition={rotateAnimation.transition}
         className="hidden lg:block absolute top-1/4 right-1/4 text-3xl opacity-15"
       >
-        💰
+        <DollarSign className="w-8 h-8 text-green-400" />
       </motion.div>
 
       <motion.div
@@ -114,7 +128,7 @@ const Donate = () => {
         transition={{ duration: 1 }}
         className="hidden lg:block absolute left-1/4 bottom-1/3 text-6xl opacity-10"
       >
-        🩸
+        <Droplets className="w-16 h-16 text-red-300" />
       </motion.div>
 
       <motion.div
@@ -163,14 +177,14 @@ const Donate = () => {
               }}
               className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl md:rounded-2xl mb-3 md:mb-4 shadow-lg"
             >
-              <span className="text-3xl md:text-4xl text-white">🩸</span>
+              <Droplets className="w-8 h-8 md:w-10 md:h-10 text-white" />
             </motion.div>
 
             <motion.h2
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-600 via-pink-500 to-rose-500 bg-clip-text text-transparent mb-2"
+              className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent mb-2"
             >
               Donate Blood, Save Lives
             </motion.h2>
@@ -204,8 +218,8 @@ const Donate = () => {
                   required
                   min="1"
                 />
-                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base">
-                  💰
+                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <DollarSign className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
               </div>
 
@@ -244,7 +258,7 @@ const Donate = () => {
                           exit={{ scale: 0, opacity: 0 }}
                           className="ml-1 text-xs"
                         >
-                          💫
+                          <Sparkles className="w-3 h-3" />
                         </motion.span>
                       )}
                     </AnimatePresence>
@@ -264,7 +278,7 @@ const Donate = () => {
                 animate={{ scale: [1, 1.02, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
               >
-                <span>👤</span>
+                <User className="w-4 h-4" />
                 Donor Information
               </motion.h3>
 
@@ -275,13 +289,13 @@ const Donate = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.7 }}
                 >
-                  <motion.span
+                  <motion.div
                     animate={{ rotate: [0, 10, -10, 0] }}
                     transition={{ repeat: Infinity, duration: 3, delay: 1 }}
-                    className="text-gray-400 text-sm"
+                    className="text-gray-400"
                   >
-                    👤
-                  </motion.span>
+                    <User className="w-4 h-4" />
+                  </motion.div>
                   <span className="text-gray-600 text-sm md:text-base">
                     <span className="font-medium">Name:</span>{" "}
                     {user?.displayName || "Not available"}
@@ -294,13 +308,13 @@ const Donate = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.8 }}
                 >
-                  <motion.span
+                  <motion.div
                     animate={{ y: [0, -2, 0] }}
                     transition={{ repeat: Infinity, duration: 2, delay: 1.2 }}
-                    className="text-gray-400 text-sm"
+                    className="text-gray-400"
                   >
-                    ✉️
-                  </motion.span>
+                    <Mail className="w-4 h-4" />
+                  </motion.div>
                   <span className="text-gray-600 text-sm md:text-base">
                     <span className="font-medium">Email:</span>{" "}
                     {user?.email || "Not available"}
@@ -319,10 +333,12 @@ const Donate = () => {
                 <motion.span
                   animate={{ x: [0, 5, 0] }}
                   transition={{ repeat: Infinity, duration: 2 }}
+                  className="flex items-center gap-1"
                 >
+                  <Heart className="w-3 h-3" />
                   Every donation saves 3 lives
                 </motion.span>
-                <span>🩸</span>
+                <Droplets className="w-4 h-4" />
               </div>
               <div className="h-2 bg-gray-100 dark:bg-gray-600 rounded-full overflow-hidden">
                 <motion.div
@@ -361,19 +377,7 @@ const Donate = () => {
                 type="submit"
                 disabled={loading}
                 {...buttonHoverAnimation}
-                animate={{
-                  background: loading
-                    ? ["#ef4444", "#ec4899", "#f43f5e", "#ef4444"]
-                    : ["#ef4444", "#ec4899", "#f43f5e"],
-                }}
-                transition={{
-                  background: {
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                }}
-                className="w-full px-6 py-3 md:px-8 md:py-4 font-semibold text-white rounded-lg md:rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl transform text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
+                className="w-full px-6 py-3 md:px-8 md:py-4 font-semibold text-white rounded-lg md:rounded-xl bg-gradient-to-r from-red-500 to-red-300 transition-all duration-300 shadow-xl hover:shadow-2xl transform text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
               >
                 <motion.div
                   animate={shineEffect.animate}
@@ -384,27 +388,13 @@ const Donate = () => {
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   {loading ? (
                     <>
-                      <motion.svg
+                      <motion.div
                         animate={rotateAnimation.animate}
                         transition={rotateAnimation.transition}
-                        className="h-5 w-5 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
+                        className="text-white"
                       >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </motion.svg>
+                        <Loader2 className="w-5 h-5" />
+                      </motion.div>
                       Processing Payment...
                     </>
                   ) : (
@@ -429,7 +419,13 @@ const Donate = () => {
                     className="absolute text-2xl"
                     {...confettiAnimation(i)}
                   >
-                    {["🎉", "✨", "🌟", "💫", "⭐"][i % 5]}
+                    {[
+                      <Sparkles className="w-6 h-6 text-yellow-400" />,
+                      <Star className="w-6 h-6 text-blue-400" />,
+                      <Zap className="w-6 h-6 text-purple-400" />,
+                      <Award className="w-6 h-6 text-green-400" />,
+                      <Target className="w-6 h-6 text-red-400" />
+                    ][i % 5]}
                   </motion.div>
                 ))}
               </motion.div>

@@ -1,18 +1,17 @@
 import { FcGoogle } from "react-icons/fc";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../Provider/AuthProvider";
 import { updateProfile } from "firebase/auth";
 import axios from "axios";
-import auth from "../Firebase/firebase.config";
+import auth from "../firebase/firebase.config";
 import { motion } from "framer-motion";
 import {
   pageVariants,
-  cardVariants,
-  fadeInUp,
   floatAnimation,
   bounceAnimation,
 } from "../utils/AnimationUtils";
+import { User, Mail, Lock, Droplets, Heart } from "lucide-react";
 
 const Register = () => {
   const [upazilas, setUpazilas] = useState([]);
@@ -107,9 +106,9 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center p-4">
       <motion.div
         animate={floatAnimation}
-        className="hidden lg:block absolute top-10 right-10 text-4xl opacity-10"
+        className="hidden lg:block absolute top-10 right-10 opacity-10"
       >
-        🩸
+        <Droplets className="w-16 h-16 text-red-400" />
       </motion.div>
       <motion.div
         animate={{
@@ -122,9 +121,9 @@ const Register = () => {
           delay: 0.5,
           ease: "easeInOut",
         }}
-        className="hidden lg:block absolute bottom-10 left-10 text-4xl opacity-10"
+        className="hidden lg:block absolute bottom-10 left-10 opacity-10"
       >
-        ❤️
+        <Heart className="w-16 h-16 text-red-400" />
       </motion.div>
 
       <motion.div
@@ -133,7 +132,7 @@ const Register = () => {
         variants={pageVariants}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700">
+        <div className="rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-200">
           <motion.div
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -141,7 +140,7 @@ const Register = () => {
             className="text-center mb-6 md:mb-8"
           >
             <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl md:rounded-2xl mb-3 md:mb-4 shadow-md">
-              <span className="text-3xl md:text-4xl text-white">🩸</span>
+              <Droplets className="w-8 h-8 md:w-10 md:h-10 text-white" />
             </div>
             <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-600 via-pink-500 to-rose-500 bg-clip-text text-transparent mb-2">
               Create Your Account
@@ -165,11 +164,11 @@ const Register = () => {
                   name="fullName"
                   type="text"
                   placeholder="Enter your full name"
-                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                 />
-                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2  text-sm md:text-base">
-                  👤
+                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <User className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
               </div>
             </motion.div>
@@ -187,11 +186,11 @@ const Register = () => {
                   name="email"
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                 />
-                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base">
-                  ✉️
+                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Mail className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
               </div>
             </motion.div>
@@ -209,7 +208,7 @@ const Register = () => {
                   name="photoURL"
                   type="file"
                   accept="image/*"
-                  className="w-full p-3 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-xs md:text-sm"
+                  className="w-full p-3 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-xs md:text-sm"
                 />
               </div>
             </motion.div>
@@ -225,7 +224,7 @@ const Register = () => {
               <select
                 name="blood"
                 defaultValue=""
-                className="w-full p-3 md:p-4 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base appearance-none"
+                className="w-full p-3 md:p-4 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base appearance-none"
                 required
               >
                 <option value="" disabled>
@@ -254,7 +253,7 @@ const Register = () => {
                 <select
                   name="district"
                   defaultValue=""
-                  className="w-full p-3 md:p-4 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base appearance-none"
+                  className="w-full p-3 md:p-4 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base appearance-none"
                   required
                 >
                   <option value="" disabled>
@@ -279,7 +278,7 @@ const Register = () => {
                 <select
                   name="upazila"
                   defaultValue=""
-                  className="w-full p-3 md:p-4 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base appearance-none"
+                  className="w-full p-3 md:p-4 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base appearance-none"
                   required
                 >
                   <option value="" disabled>
@@ -307,11 +306,11 @@ const Register = () => {
                   name="password"
                   type="password"
                   placeholder="Enter your password"
-                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="w-full p-3 md:p-4 pl-10 md:pl-12 rounded-lg md:rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                 />
-                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base">
-                  🔒
+                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Lock className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
               </div>
             </motion.div>
@@ -336,10 +335,10 @@ const Register = () => {
               className="relative my-4 md:my-6"
             >
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-600"></div>
+                <div className="w-full border-t border-gray-200"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-3 md:px-4 text-gray-500 dark:text-gray-400 text-xs md:text-sm">
+                <span className="px-3 md:px-4 text-gray-500 text-xs md:text-sm">
                   Or continue with
                 </span>
               </div>
@@ -353,7 +352,7 @@ const Register = () => {
               <button
                 type="button"
                 onClick={googleSignIn}
-                className="w-full flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 font-semibold text-gray-800 rounded-lg md:rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md md:hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 text-sm md:text-base"
+                className="w-full flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 font-semibold text-gray-800 rounded-lg md:rounded-xl border border-gray-200 shadow-sm hover:shadow-md md:hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 text-sm md:text-base"
               >
                 <FcGoogle size={18} md:size={22} />
                 <span>Continue with Google</span>
@@ -365,13 +364,13 @@ const Register = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
-            className="text-center mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-200 dark:border-gray-700"
+            className="text-center mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-200"
           >
             <p className="text-gray-600  text-sm md:text-base">
               Already have an account?{" "}
               <Link
                 to={"/login"}
-                className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 font-semibold hover:underline inline-flex items-center gap-1 transition-all"
+                className="text-red-500 hover:text-red-600 font-semibold hover:underline inline-flex items-center gap-1 transition-all"
               >
                 Login
                 <motion.span animate={bounceAnimation} className="inline-block">

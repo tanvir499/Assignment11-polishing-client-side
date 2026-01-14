@@ -409,7 +409,7 @@ const DonationRequest = () => {
                         <motion.button
                           {...buttonHoverAnimation}
                           onClick={() => handleView(request._id)}
-                          className="w-full mt-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-3 group"
+                          className="w-full mt-8 py-3 bg-gradient-to-r from-red-500 to-red-300 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-3 group"
                         >
                           <Eye className="w-5 h-5 group-hover:scale-110 transition-transform" />
                           View Full Details

@@ -18,8 +18,12 @@ import {
   PlusCircle,
   Filter,
   BarChart3,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MyRequest = () => {
   const [totalRequest, seTotalRequest] = useState(0);
@@ -150,6 +154,43 @@ const MyRequest = () => {
 
   const handleAddRequest = () => {
     window.location.href = "/dashboard/add-request";
+  };
+
+  const handleStatusChange = async (requestId, newStatus) => {
+    const loadingToast = toast.loading(`Updating status to ${newStatus}...`, {
+      position: "top-center",
+      theme: "colored",
+    });
+
+    try {
+      await axiosSecure.patch(`/request/${requestId}`, {
+        status: newStatus,
+      });
+
+      toast.update(loadingToast, {
+        render: `Status updated to ${newStatus} successfully!`,
+        type: "success",
+        isLoading: false,
+        position: "top-center",
+        autoClose: 3000,
+        theme: "colored",
+        closeButton: true,
+      });
+
+      // Refresh the requests list
+      handleRefresh();
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.update(loadingToast, {
+        render: "Failed to update status. Please try again.",
+        type: "error",
+        isLoading: false,
+        position: "top-center",
+        autoClose: 3000,
+        theme: "colored",
+        closeButton: true,
+      });
+    }
   };
 
   return (
@@ -449,14 +490,41 @@ const MyRequest = () => {
                             Request #
                             {(currentPage - 1) * itemsPerPage + index + 1}
                           </span>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
-                          >
-                            <Eye className="w-4 h-4" />
-                            View Details
-                          </motion.button>
+                          {request.status === "inprogress" ? (
+                            <div className="flex gap-2">
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() =>
+                                  handleStatusChange(request._id, "done")
+                                }
+                                className="px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                                Done
+                              </motion.button>
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() =>
+                                  handleStatusChange(request._id, "cancelled")
+                                }
+                                className="px-3 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
+                              >
+                                <XCircle className="w-4 h-4" />
+                                Cancel
+                              </motion.button>
+                            </div>
+                          ) : (
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
+                            >
+                              <Eye className="w-4 h-4" />
+                              View Details
+                            </motion.button>
+                          )}
                         </div>
                       </div>
                     </motion.div>
@@ -605,14 +673,41 @@ const MyRequest = () => {
                               </span>
                             </td>
                             <td className="p-6">
-                              <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
-                              >
-                                <Eye className="w-4 h-4" />
-                                View
-                              </motion.button>
+                              {request.status === "inprogress" ? (
+                                <div className="flex gap-2">
+                                  <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() =>
+                                      handleStatusChange(request._id, "done")
+                                    }
+                                    className="px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
+                                  >
+                                    <CheckCircle className="w-4 h-4" />
+                                    Done
+                                  </motion.button>
+                                  <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() =>
+                                      handleStatusChange(request._id, "cancelled")
+                                    }
+                                    className="px-3 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
+                                  >
+                                    <XCircle className="w-4 h-4" />
+                                    Cancel
+                                  </motion.button>
+                                </div>
+                              ) : (
+                                <motion.button
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-md transition-all duration-300 flex items-center gap-2"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  View
+                                </motion.button>
+                              )}
                             </td>
                           </motion.tr>
                         ))}

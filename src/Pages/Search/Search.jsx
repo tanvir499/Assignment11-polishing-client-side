@@ -251,7 +251,6 @@ const SearchRequest = () => {
                       defaultValue=""
                       required
                       className="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none appearance-none transition-all bg-white"
-                      required
                     >
                       <option value="" disabled>
                         Select Blood Group

@@ -17,6 +17,7 @@ import DonationRequestDetails from "../Pages/DonationRequestDetails/DonationRequ
 import DonorDashboard from "../Pages/Dashboard/DonorDashboard/DonorDashboard";
 import VolunteerDashboard from "../Pages/Dashboard/VolunteerDashboard/VolunteerDashboard";
 import Volunteers from "../Pages/Volunteers";
+import DashboardOverview from "../Pages/AdminDashboard/DashboardOverview";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <MainDashboard></MainDashboard>,
+      },
+      {
+        path: "overview",
+        element: <DashboardOverview></DashboardOverview>,
       },
       {
         path: "add-request",

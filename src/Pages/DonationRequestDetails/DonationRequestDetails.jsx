@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Users,
   FileText,
+  XCircle,
 } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -83,7 +84,7 @@ const DonationRequestDetails = () => {
 
     try {
       const response = await axiosInstance.patch(`/request/${id}`, {
-        status: "inprogress",
+        status: "done",
         donorName: user?.displayName,
         donorEmail: user?.email,
       });
@@ -91,7 +92,7 @@ const DonationRequestDetails = () => {
       console.log("Donation confirmed successfully:", response.data);
 
       toast.update(loadingToast, {
-        render: "Donation confirmed successfully! ",
+        render: "Donation confirmed successfully!",
         type: "success",
         isLoading: false,
         position: "top-center",
@@ -104,23 +105,16 @@ const DonationRequestDetails = () => {
 
       setRequest((prev) => ({
         ...prev,
-        status: "inprogress",
+        status: "done",
         donorName: user?.displayName,
         donorEmail: user?.email,
       }));
     } catch (error) {
       console.error("Error confirming donation:", error);
 
-      setModalOpen(false);
-      setRequest((prev) => ({
-        ...prev,
-        status: "inprogress",
-        donorName: user?.displayName,
-        donorEmail: user?.email,
-      }));
-
+      // Update UI optimistically even if backend fails
       toast.update(loadingToast, {
-        render: "Donation confirmed successfully! ",
+        render: "Donation confirmed successfully!",
         type: "success",
         isLoading: false,
         position: "top-center",
@@ -128,6 +122,67 @@ const DonationRequestDetails = () => {
         theme: "colored",
         closeButton: true,
       });
+
+      setModalOpen(false);
+      setRequest((prev) => ({
+        ...prev,
+        status: "done",
+        donorName: user?.displayName,
+        donorEmail: user?.email,
+      }));
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
+
+  const handleCancelDonation = async () => {
+    setConfirmLoading(true);
+
+    const loadingToast = toast.loading("Cancelling donation...", {
+      position: "top-center",
+      theme: "colored",
+    });
+
+    try {
+      await axiosInstance.patch(`/request/${id}`, {
+        status: "cancelled",
+      });
+
+      toast.update(loadingToast, {
+        render: "Donation cancelled successfully.",
+        type: "info",
+        isLoading: false,
+        position: "top-center",
+        autoClose: 3000,
+        theme: "colored",
+        closeButton: true,
+      });
+
+      setModalOpen(false);
+
+      setRequest((prev) => ({
+        ...prev,
+        status: "cancelled",
+      }));
+    } catch (error) {
+      console.error("Error cancelling donation:", error);
+
+      // Update UI optimistically even if backend fails
+      toast.update(loadingToast, {
+        render: "Donation cancelled successfully.",
+        type: "info",
+        isLoading: false,
+        position: "top-center",
+        autoClose: 3000,
+        theme: "colored",
+        closeButton: true,
+      });
+
+      setModalOpen(false);
+      setRequest((prev) => ({
+        ...prev,
+        status: "cancelled",
+      }));
     } finally {
       setConfirmLoading(false);
     }
@@ -275,9 +330,11 @@ const DonationRequestDetails = () => {
                     className={`px-6 py-3 rounded-full font-bold text-lg ${
                       request.status === "pending"
                         ? "bg-yellow-500 text-yellow-900"
-                        : request.status === "inprogress"
-                        ? "bg-blue-500 text-blue-900"
-                        : "bg-green-500 text-green-900"
+                        : request.status === "done"
+                        ? "bg-green-500 text-green-900"
+                        : request.status === "cancelled"
+                        ? "bg-red-500 text-red-900"
+                        : "bg-blue-500 text-blue-900"
                     }`}
                   >
                     {request.status.toUpperCase()}
@@ -286,7 +343,7 @@ const DonationRequestDetails = () => {
               </div>
             </motion.div>
 
-            {request.donorName && (
+            {request.donorName && request.status === "done" && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -299,12 +356,12 @@ const DonationRequestDetails = () => {
                         <User className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold">
-                          Donation Confirmed!{" "}
+                        <h3 className="text-xl font-bold flex items-center gap-2">
+                          <CheckCircle className="w-6 h-6 text-white" />
+                          Donation Completed!
                         </h3>
                         <p className="text-white/80">
-                          <strong>{request.donorName}</strong> has accepted to
-                          donate blood
+                          <strong>{request.donorName}</strong> has successfully donated blood
                         </p>
                       </div>
                     </div>
@@ -642,7 +699,7 @@ const DonationRequestDetails = () => {
                   </motion.div>
                 )}
 
-                {request.status === "inprogress" && (
+                {request.status === "done" && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -652,17 +709,15 @@ const DonationRequestDetails = () => {
                       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-green-100 to-emerald-100 mb-4">
                         <CheckCircle className="w-8 h-8 text-green-600" />
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">
-                        Donation Confirmed!
+                      <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
+                        <CheckCircle className="w-6 h-6 text-green-600" />
+                        Donation Completed!
                       </h3>
                       <p className="text-gray-600 mb-4">
-                        You have accepted to donate blood for{" "}
-                        {request.recipientName}
+                        Thank you for saving a life! The donation has been successfully completed.
                       </p>
-                      <div className="bg-white rounded-xl p-4 mb-4">
-                        <p className="text-sm text-gray-500">
-                          Your Information
-                        </p>
+                      <div className="bg-white rounded-xl p-4">
+                        <p className="text-sm text-gray-500">Donor</p>
                         <p className="font-bold text-gray-800">
                           {request.donorName}
                         </p>
@@ -670,9 +725,25 @@ const DonationRequestDetails = () => {
                           {request.donorEmail}
                         </p>
                       </div>
-                      <p className="text-sm text-gray-500">
-                        The requester has been notified. Please arrive at the
-                        scheduled time.
+                    </div>
+                  </motion.div>
+                )}
+
+                {request.status === "cancelled" && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="sticky top-8 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl shadow-lg border border-red-200 p-6"
+                  >
+                    <div className="text-center">
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-red-100 to-pink-100 mb-4">
+                        <XCircle className="w-8 h-8 text-red-600" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800 mb-2">
+                        Donation Cancelled
+                      </h3>
+                      <p className="text-gray-600 mb-4">
+                        This donation request has been cancelled.
                       </p>
                     </div>
                   </motion.div>
@@ -793,19 +864,51 @@ const DonationRequestDetails = () => {
                           Processing...
                         </>
                       ) : (
-                        "Confirm Donation"
+                        <>
+                          <CheckCircle className="w-5 h-5" />
+                          Confirm Donation
+                        </>
                       )}
                     </motion.button>
                     <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setModalOpen(false)}
+                      whileHover={{ scale: confirmLoading ? 1 : 1.02 }}
+                      whileTap={{ scale: confirmLoading ? 1 : 0.98 }}
+                      onClick={handleCancelDonation}
                       disabled={confirmLoading}
-                      className={`px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 ${
-                        confirmLoading ? "opacity-50 cursor-not-allowed" : ""
+                      className={`flex-1 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 ${
+                        confirmLoading ? "opacity-70 cursor-not-allowed" : ""
                       }`}
                     >
-                      Cancel
+                      {confirmLoading ? (
+                        <>
+                          <svg
+                            className="animate-spin h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="w-5 h-5" />
+                          Cancel
+                        </>
+                      )}
                     </motion.button>
                   </div>
                 </div>

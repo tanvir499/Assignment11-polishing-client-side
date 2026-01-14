@@ -70,6 +70,12 @@ const Aside = () => {
       allRoles: true,
     },
     {
+      to: "/dashboard/overview",
+      icon: <BarChart3 className="w-5 h-5" />,
+      label: "Dashboard Overview",
+      roles: ["admin"],
+    },
+    {
       to: "/dashboard/my-request",
       icon: <FileText className="w-5 h-5" />,
       label: "My Requests",
